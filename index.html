@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>10 Sekunden – Triff die Zeit!</title>
+  <meta name="description" content="Triff exakt 10 Sekunden ohne hinzuschauen. Ein kleines Reaktionsspiel von OpenZirndorf mit Waschbär-Maskottchen und lokaler Bestenliste." />
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#stage">Zum Spiel springen</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="https://openzirndorf.de/" target="_blank" rel="noopener noreferrer">
+        <span class="brand-dot" aria-hidden="true"></span>
+        OpenZirndorf
+      </a>
+      <button class="btn btn-outline btn-sm" id="open-leaderboard" type="button" aria-haspopup="dialog">
+        🏆 Rangliste
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container stage-wrap">
+
+      <h1 class="title">10 Sekunden</h1>
+      <p class="subtitle">Starte die Uhr, warte im Blindflug und stoppe <strong>genau</strong> bei 10,000&nbsp;s.</p>
+
+      <section id="stage" class="stage" tabindex="0" role="button" aria-label="Spielfläche – Enter oder Klick zum Starten/Stoppen">
+
+        <img class="mascot" id="mascot" src="images/waschbaer.png" alt="Der OpenZirndorf-Waschbär mit Lupe" />
+
+        <div class="timer" id="timer" aria-live="off">
+          <span id="timer-value">0.000</span><span class="timer-unit">&nbsp;s</span>
+        </div>
+
+        <p class="stage-hint" id="stage-hint">Enter oder Klick zum Start</p>
+
+        <div class="result" id="result" hidden>
+          <div class="prize-banner" id="prize-banner" hidden role="status">
+            <span class="prize-label" id="prize-label"></span>
+            <span class="prize-instruction">Zeig das dem Standpersonal für deinen Stempel.</span>
+          </div>
+          <p class="result-headline" id="result-headline"></p>
+          <p class="result-detail" id="result-detail"></p>
+
+          <form class="entry-form" id="entry-form" hidden>
+            <label for="nickname">Top-20-Ergebnis! Magst du dich eintragen? (freiwillig)</label>
+            <div class="entry-row">
+              <input type="text" id="nickname" name="nickname" maxlength="20" placeholder="Nickname (optional)" autocomplete="off" />
+              <button class="btn btn-primary" type="submit">Eintragen</button>
+            </div>
+            <button class="btn-link" id="skip-entry" type="button">Ohne Eintrag weiter</button>
+          </form>
+
+          <p class="result-again">Enter oder Klick für die nächste Runde</p>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <h2 id="modal-title">🏆 Top 20</h2>
+        <button class="btn-icon" id="close-leaderboard" type="button" aria-label="Schließen">✕</button>
+      </div>
+      <p class="modal-hint">Gespeichert nur in diesem Browser.</p>
+      <ol class="leaderboard-list" id="leaderboard-list"></ol>
+      <p class="leaderboard-empty" id="leaderboard-empty" hidden>Noch keine Einträge – sei der/die Erste!</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>🦝 Ein Spiel von <a href="https://openzirndorf.de/" target="_blank" rel="noopener noreferrer">OpenZirndorf</a> · <a href="impressum.html">Impressum &amp; Datenschutz</a></p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
