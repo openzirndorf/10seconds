@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>10 Sekunden – Live-Stand</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/assets/shared.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🦝 10 Sekunden – Live-Stand</h1>
+    <p class="lead">Wer liegt gerade am nächsten an exakt 10,000 Sekunden?</p>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Nickname</th><th>Zeit</th><th>Abweichung</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p class="empty" id="empty" hidden>Noch keine Ergebnisse – das erste Spiel startet den Stand.</p>
+    </div>
+
+    <p class="muted" id="updated">Lädt …</p>
+  </div>
+
+  <script src="/assets/live.js"></script>
+</body>
+</html>

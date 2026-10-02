@@ -1,0 +1,22 @@
+FROM python:3.12-slim
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Eigener, unprivilegierter User statt root.
+RUN groupadd --gid 1000 app && useradd --uid 1000 --gid app --no-create-home app
+
+COPY --chown=app:app . .
+RUN mkdir -p /app/data && chown app:app /app/data
+
+USER app
+
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=4)"]
+# Ein Worker: leaderboard.py cacht im Prozessspeicher und schützt
+# Schreibzugriffe nur mit einem asyncio.Lock — gilt nur innerhalb dieses
+# einen Prozesses. Mehrere Worker/Replicas würden sich beim Schreiben der
+# JSON-Datei gegenseitig überschreiben.
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]

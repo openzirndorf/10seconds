@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>10 Sekunden – Triff die Zeit!</title>
-  <meta name="description" content="Triff exakt 10 Sekunden ohne hinzuschauen. Ein kleines Reaktionsspiel von OpenZirndorf mit Waschbär-Maskottchen und lokaler Bestenliste." />
+  <meta name="description" content="Triff exakt 10 Sekunden ohne hinzuschauen. Ein kleines Reaktionsspiel von OpenZirndorf mit Waschbär-Maskottchen und Live-Bestenliste." />
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -56,6 +56,13 @@
               <input type="text" id="nickname" name="nickname" maxlength="20" placeholder="Nickname (optional)" autocomplete="off" />
               <button class="btn btn-primary" type="submit">Eintragen</button>
             </div>
+            <div class="entry-row entry-row-email" id="email-row" hidden>
+              <label for="email" class="entry-email-label">
+                Top 10! Für die Verlosung optional deine Mail dazu (wird nicht angezeigt):
+              </label>
+              <input type="email" id="email" name="email" maxlength="254" placeholder="E-Mail (optional)" autocomplete="off" />
+            </div>
+            <p class="error" id="entry-error" hidden></p>
             <button class="btn-link" id="skip-entry" type="button">Ohne Eintrag weiter</button>
           </form>
 
@@ -73,9 +80,10 @@
         <h2 id="modal-title">🏆 Top 20</h2>
         <button class="btn-icon" id="close-leaderboard" type="button" aria-label="Schließen">✕</button>
       </div>
-      <p class="modal-hint">Gespeichert nur in diesem Browser.</p>
+      <p class="modal-hint">Live-Rangliste – für alle sichtbar, ohne Mailadressen.</p>
       <ol class="leaderboard-list" id="leaderboard-list"></ol>
       <p class="leaderboard-empty" id="leaderboard-empty" hidden>Noch keine Einträge – sei der/die Erste!</p>
+      <p class="error" id="leaderboard-error" hidden>Rangliste gerade nicht erreichbar – später nochmal versuchen.</p>
     </div>
   </div>
 
