@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="game">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,88 +11,165 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="game-page">
   <a class="skip-link" href="#stage">Zum Spiel springen</a>
 
   <header class="topbar">
-    <div class="container topbar-inner">
+    <div class="layout topbar-inner">
       <a class="brand" href="https://openzirndorf.de/" target="_blank" rel="noopener noreferrer">
         <span class="brand-dot" aria-hidden="true"></span>
         OpenZirndorf
       </a>
-      <button class="btn btn-outline btn-sm" id="open-leaderboard" type="button" aria-haspopup="dialog">
-        🏆 Rangliste
-      </button>
+      <span class="topbar-tag">Mitmach-Spiel am Stand</span>
     </div>
   </header>
 
   <main id="main">
-    <div class="container stage-wrap">
+    <div class="layout game-grid">
 
-      <h1 class="title">10 Sekunden</h1>
-      <p class="subtitle">Starte die Uhr, warte im Blindflug und stoppe <strong>genau</strong> bei 10,000&nbsp;s.</p>
+      <!-- ===== Linke Spalte: Sofort-Preise + Tagesstatistik =====
+           Bewusst knapp: Ausführliche Regeln stehen auf dem ausgedruckten
+           Spielregeln-Blatt neben dem Bildschirm und unter /teilnahme. -->
+      <aside class="panel panel-info" aria-labelledby="info-title">
+        <h2 class="panel-title" id="info-title">🎁 Sofort-Preise</h2>
+        <p class="panel-text">In jeder Runde – je näher an 10,000&nbsp;s, desto besser:</p>
+        <ul class="tiers">
+          <li class="tier tier-kat1">
+            <span class="tier-icon" aria-hidden="true">🏆</span>
+            <span class="tier-body">
+              <span class="tier-name">Kategorie 1</span>
+              <span class="tier-range">bis ±<span data-threshold="kat1">0.100</span>&nbsp;s</span>
+            </span>
+          </li>
+          <li class="tier tier-kat2">
+            <span class="tier-icon" aria-hidden="true">🎖️</span>
+            <span class="tier-body">
+              <span class="tier-name">Kategorie 2</span>
+              <span class="tier-range">bis ±<span data-threshold="kat2">0.400</span>&nbsp;s</span>
+            </span>
+          </li>
+          <li class="tier tier-trost">
+            <span class="tier-icon" aria-hidden="true">🐻</span>
+            <span class="tier-body">
+              <span class="tier-name">Trostpreis</span>
+              <span class="tier-desc">Eine Tüte Gummibärchen</span>
+            </span>
+          </li>
+        </ul>
+        <p class="panel-note">♻️ Retourenware – bei der Übergabe gemeinsam prüfen. Freie Wahl, solange der Vorrat reicht.</p>
 
-      <section id="stage" class="stage" tabindex="0" role="button" aria-label="Spielfläche – Enter oder Klick zum Starten/Stoppen">
+        <p class="member-card"><strong>🤝 Mitglied werden = 2 Freiversuche</strong> Beitrittserklärung für OpenZirndorf e.V. gibt's am Stand.</p>
 
-        <img class="mascot" id="mascot" src="images/waschbaer.png" alt="Der OpenZirndorf-Waschbär mit Lupe" />
+        <section class="stats" aria-labelledby="stats-title">
+          <h3 class="stats-title" id="stats-title">📊 Heute · <span id="stats-count">0 Versuche</span></h3>
+          <div class="stats-bar" id="stats-bar" aria-hidden="true"></div>
+          <ul class="stats-legend" id="stats-legend"></ul>
+          <p class="stats-best" id="stats-best"></p>
+        </section>
+      </aside>
 
-        <div class="timer" id="timer" aria-live="off">
-          <span id="timer-value">0.000</span><span class="timer-unit">&nbsp;s</span>
-        </div>
+      <!-- ===== Mitte: Spiel ===== -->
+      <section class="play" aria-labelledby="game-title">
+        <h1 class="title" id="game-title"><span class="title-num">10</span> Sekunden</h1>
+        <p class="subtitle">Starte die Uhr, warte im Blindflug und stoppe <strong>genau</strong> bei 10,000&nbsp;s.</p>
 
-        <p class="stage-hint" id="stage-hint">Enter oder Klick zum Start</p>
+        <div id="stage" class="stage" tabindex="0" role="button" aria-label="Spielfläche – Buzzer, Enter oder Klick zum Starten/Stoppen">
 
-        <div class="result" id="result" hidden>
-          <div class="prize-banner" id="prize-banner" hidden role="status">
-            <span class="prize-label" id="prize-label"></span>
-            <span class="prize-instruction">Zeig das dem Standpersonal für deinen Stempel.</span>
+          <img class="mascot" id="mascot" src="images/waschbaer-buzzer.png" alt="Der OpenZirndorf-Waschbär drückt einen roten Buzzer, die Anzeige zeigt 10,00" />
+
+          <div class="timer" id="timer" aria-live="off">
+            <span id="timer-value">0.000</span><span class="timer-unit">&nbsp;s</span>
           </div>
-          <p class="result-headline" id="result-headline"></p>
-          <p class="result-detail" id="result-detail"></p>
 
-          <form class="entry-form" id="entry-form" hidden>
-            <label for="nickname">Top-20-Ergebnis! Magst du dich eintragen? (freiwillig)</label>
-            <div class="entry-row">
-              <input type="text" id="nickname" name="nickname" maxlength="20" placeholder="Nickname (optional)" autocomplete="off" />
-              <button class="btn btn-primary" type="submit">Eintragen</button>
-            </div>
-            <div class="entry-row entry-row-email" id="email-row" hidden>
-              <label for="email" class="entry-email-label">
-                Top 10! Für die Verlosung optional deine Mail dazu (wird nicht angezeigt):
-              </label>
-              <input type="email" id="email" name="email" maxlength="254" placeholder="E-Mail (optional)" autocomplete="off" />
-            </div>
-            <p class="error" id="entry-error" hidden></p>
-            <button class="btn-link" id="skip-entry" type="button">Ohne Eintrag weiter</button>
-          </form>
+          <p class="donate-badge" id="donate-badge">💚 <strong>1&nbsp;€ pro Versuch</strong> · <strong>3 Versuche 2&nbsp;€</strong> – für OpenZirndorf, danke!</p>
 
-          <p class="result-again">Enter oder Klick für die nächste Runde</p>
+          <p class="rules-line" id="rules-line">🚫 Ohne Uhr, ohne Kopfhörer, ohne Hilfe von anderen</p>
+
+          <p class="ranked-badge" id="ranked-badge" hidden>🏆 Ranglisten-Runde</p>
+
+          <p class="stage-hint" id="stage-hint">Buzzer drücken zum Start</p>
+
+          <div class="result" id="result" hidden>
+            <div class="prize-banner" id="prize-banner" hidden role="status">
+              <span class="prize-label" id="prize-label"></span>
+              <span class="prize-instruction" id="prize-instruction"></span>
+            </div>
+            <p class="result-headline" id="result-headline"></p>
+            <p class="result-detail" id="result-detail"></p>
+            <p class="trost-note" id="trost-note" hidden>🐻 Trostpreis: eine Tüte Gummibärchen</p>
+            <p class="result-compare" id="result-compare" hidden></p>
+
+            <div class="claim" id="claim" hidden>
+              <div class="claim-qr" id="claim-qr" aria-hidden="true"></div>
+              <div class="claim-text">
+                <strong class="claim-title">Platz <span id="claim-rank"></span> – trag deine Mail ein!</strong>
+                <span class="claim-name-label">Du stehst in der Rangliste als</span>
+                <span class="claim-name" id="claim-name"></span>
+                <span class="claim-slip">Code <span class="claim-code" id="claim-code"></span> · Zeit <span class="claim-time" id="claim-time"></span>&nbsp;s</span>
+                <span>📱 QR-Code mit dem Handy scannen</span>
+                <span>📝 oder Zettel vom Standpersonal: Mail eintragen → in die Box</span>
+                <span class="claim-small">Ohne Mail können wir dich bei einem Ranglisten-Preis nicht erreichen.</span>
+              </div>
+            </div>
+            <p class="muted-note" id="claim-note" hidden></p>
+
+            <p class="result-again">Buzzer drücken für die nächste Runde</p>
+          </div>
+
+          <div class="result-bar" id="result-bar" aria-hidden="true"></div>
         </div>
-
       </section>
+
+      <!-- ===== Rechte Spalte: Rangliste + Ranglisten-Preise ===== -->
+      <aside class="panel panel-board" aria-labelledby="board-title">
+        <div class="panel-head">
+          <h2 class="panel-title" id="board-title">🏆 Rangliste</h2>
+          <span class="live-dot" id="live-dot" title="Wird automatisch aktualisiert">live</span>
+        </div>
+        <!-- Sponsoren der Ranglisten-Preise (Gutscheine). Weitere Namen mit
+             " · " anhängen. Die Sofort-Preise sind nicht gesponsert. -->
+        <p class="board-prize">🎟️ Gutscheine von <strong>Steinbock Zirndorf</strong> für die Besten bei Aktionsende</p>
+        <p class="board-note">Nur Ranglisten-Runden: ab 18 oder mit Erwachsenen – vor dem Start ansagen</p>
+        <ol class="board" id="leaderboard-list"></ol>
+        <p class="board-empty" id="leaderboard-empty" hidden>Noch keine Einträge – sei der/die Erste!</p>
+        <p class="error" id="leaderboard-error" hidden>Rangliste gerade nicht erreichbar.</p>
+      </aside>
 
     </div>
   </main>
 
-  <div class="modal-backdrop" id="modal-backdrop" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div class="modal-head">
-        <h2 id="modal-title">🏆 Top 20</h2>
-        <button class="btn-icon" id="close-leaderboard" type="button" aria-label="Schließen">✕</button>
+  <!-- Personal-Anzeige: Taste S am Spiel-PC. Nicht für Mitspielende gedacht,
+       daher kein sichtbarer Knopf. -->
+  <div class="staff" id="staff" hidden role="dialog" aria-labelledby="staff-title">
+    <h2 id="staff-title">🛠️ Standpersonal</h2>
+    <ul class="staff-summary" id="staff-summary"></ul>
+    <form id="staff-form">
+      <fieldset>
+        <legend>Preisfenster (± Millisekunden)</legend>
+        <label>Kategorie 1 <input name="kat1Ms" type="number" min="0" max="5000" step="10" inputmode="numeric" /></label>
+        <label>Kategorie 2 <input name="kat2Ms" type="number" min="0" max="5000" step="10" inputmode="numeric" /></label>
+      </fieldset>
+      <fieldset>
+        <legend>Vorrat zu Beginn</legend>
+        <label>Kategorie 1 <input name="kat1Stock" type="number" min="0" max="999" inputmode="numeric" /></label>
+        <label>Kategorie 2 <input name="kat2Stock" type="number" min="0" max="999" inputmode="numeric" /></label>
+      </fieldset>
+      <div class="staff-actions">
+        <button type="submit" class="staff-btn primary">Übernehmen</button>
+        <button type="button" class="staff-btn" id="staff-close">Schließen</button>
+        <button type="button" class="staff-btn danger" id="staff-reset">Tag zurücksetzen</button>
       </div>
-      <p class="modal-hint">Live-Rangliste – für alle sichtbar, ohne Mailadressen.</p>
-      <ol class="leaderboard-list" id="leaderboard-list"></ol>
-      <p class="leaderboard-empty" id="leaderboard-empty" hidden>Noch keine Einträge – sei der/die Erste!</p>
-      <p class="error" id="leaderboard-error" hidden>Rangliste gerade nicht erreichbar – später nochmal versuchen.</p>
-    </div>
+      <p class="staff-hint">R = nächste Runde als Ranglisten-Runde · S/Esc = schließen · Werte gelten nur auf diesem Rechner.</p>
+    </form>
   </div>
 
   <footer class="footer">
     <div class="container">
-      <p>🦝 Ein Spiel von <a href="https://openzirndorf.de/" target="_blank" rel="noopener noreferrer">OpenZirndorf</a> · <a href="impressum.html">Impressum &amp; Datenschutz</a></p>
+      <p>🦝 Ein Spiel von <a href="https://openzirndorf.de/" target="_blank" rel="noopener noreferrer">OpenZirndorf</a><span class="terms-item"> · <a data-terms-link href="#">Teilnahmebedingungen</a></span> · <a href="impressum.html">Impressum &amp; Datenschutz</a></p>
     </div>
   </footer>
 
+  <script src="vendor/qrcode.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

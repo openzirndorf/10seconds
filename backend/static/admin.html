@@ -8,8 +8,19 @@
   <link rel="stylesheet" href="/assets/shared.css" />
   <style>
     .login-card { max-width: 360px; margin: 3rem auto 0; }
+    .container { width: min(1200px, calc(100% - 2rem)); }
+    .table-wrap { overflow-x: auto; }
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .toolbar h1 { margin: 0; font-size: 1.4rem; }
+    td.time, td.dev { white-space: nowrap; }
+    td.code { font-family: var(--font-mono); font-weight: 800; letter-spacing: 0.1em; }
+    .mail-form { display: flex; gap: 0.4rem; align-items: center; min-width: 18rem; }
+    .mail-form input { padding: 0.35rem 0.6rem; font-size: 0.9rem; }
+    .mail-form .btn, .btn-small { padding: 0.35rem 0.8rem; font-size: 0.85rem; }
+    .row-msg { display: block; margin-top: 0.25rem; font-size: 0.8rem; }
+    .row-msg.ok { color: var(--oz-brand-green-dark); font-weight: 600; }
+    .btn-danger { background: transparent; color: #B91C1C; border-color: #FCA5A5; }
+    ol.steps { margin: 0.5rem 0 0; padding-left: 1.2rem; line-height: 1.6; }
   </style>
 </head>
 <body>
@@ -39,6 +50,16 @@
       </div>
 
       <div class="card">
+        <h2>📝 Zettel aus der Box nachtragen</h2>
+        <ol class="steps">
+          <li>Unten in „Alle Einträge“ von Platz 1 abwärts gehen.</li>
+          <li>Zum <strong>Code</strong> den Zettel suchen, <strong>Zeit vergleichen</strong> (muss passen) und prüfen, ob das Häkchen „ab 18 / Begleitperson“ gesetzt ist.</li>
+          <li>Mail eintragen → Speichern. Ist die Mail schon bei einem besseren Platz eingetragen, wird sie abgelehnt – der Eintrag zählt dann nicht, die nächste Person rückt nach.</li>
+          <li>Aufhören, sobald oben genug Kandidat:innen stehen. Per QR-Code eingetragene Mails sind schon drin.</li>
+        </ol>
+      </div>
+
+      <div class="card">
         <h2>Verlosungs-Kandidat:innen</h2>
         <p class="muted">
           Top <span id="pool-size"></span> unterschiedliche Mailadressen nach Zeitabweichung,
@@ -46,7 +67,7 @@
           zählt nur ihr bester — die nächste unterschiedliche Person rückt nach.
         </p>
         <table>
-          <thead><tr><th>#</th><th>Nickname</th><th>Zeit</th><th>Abweichung</th><th>E-Mail</th></tr></thead>
+          <thead><tr><th>#</th><th>Code</th><th>Nickname</th><th>Zeit</th><th>Abweichung</th><th>E-Mail</th></tr></thead>
           <tbody id="pool-rows"></tbody>
         </table>
         <p class="empty" id="pool-empty" hidden>Noch niemand mit Mailadresse dabei.</p>
@@ -54,10 +75,12 @@
 
       <div class="card">
         <h2>Alle Einträge</h2>
+        <div class="table-wrap">
         <table>
-          <thead><tr><th>#</th><th>Nickname</th><th>Zeit</th><th>Abweichung</th><th>E-Mail</th></tr></thead>
+          <thead><tr><th>#</th><th>Code</th><th>Nickname</th><th>Zeit</th><th>Abweichung</th><th>E-Mail</th><th></th></tr></thead>
           <tbody id="all-rows"></tbody>
         </table>
+        </div>
         <p class="empty" id="all-empty" hidden>Noch keine Ergebnisse.</p>
       </div>
     </div>

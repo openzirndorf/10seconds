@@ -112,3 +112,252 @@ input:focus { outline: none; border-color: var(--oz-brand-green); }
 .error { color: #B91C1C; font-weight: 600; font-size: 0.9rem; }
 .muted { color: var(--text-muted); font-size: 0.85rem; }
 .empty { color: var(--text-muted); padding: 1rem 0; }
+
+a { color: var(--oz-brand-green-dark); }
+
+/* ============================================================
+   Eintragen: Handy (/e/<token>)
+   ============================================================ */
+
+.claim-page {
+  background:
+    radial-gradient(700px 400px at 0% 0%, rgba(0, 154, 0, 0.10), transparent 60%),
+    radial-gradient(700px 400px at 100% 100%, rgba(217, 96, 32, 0.10), transparent 60%),
+    var(--bg-alt);
+  background-attachment: fixed;
+}
+.claim-wrap { width: min(520px, calc(100% - 2rem)); margin: 0 auto; padding: 1.25rem 0 2.5rem; }
+
+.claim-head { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.75rem; }
+.claim-mascot { width: 88px; height: auto; flex: none; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15)); }
+.claim-head h1 { margin: 0; font-size: clamp(1.5rem, 6vw, 2.2rem); line-height: 1.1; }
+.claim-kicker {
+  margin: 0 0 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oz-brand-green-dark);
+}
+.claim-lead { margin: 0 0 1rem; color: var(--text-muted); line-height: 1.5; }
+.claim-foot { margin: 1.25rem 0 0; text-align: center; font-size: 0.85rem; }
+
+.claim-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(17, 24, 39, 0.10), 0 2px 6px rgba(17, 24, 39, 0.05);
+  padding: 1.25rem;
+  animation: cf-in 0.3s ease;
+}
+@keyframes cf-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---- Formular ---- */
+.cf { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.cf-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--oz-brand-green), var(--oz-brand-green-dark));
+  color: #fff;
+}
+.cf-hero-body { display: flex; flex-direction: column; }
+.cf-hero-label { font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+.cf-hero-time { font-family: var(--font-mono); font-weight: 700; font-size: 1.9rem; line-height: 1.1; }
+
+.cf-medal {
+  flex: none;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+.cf-medal.m1 { background: linear-gradient(135deg, #f4c542, #b8860b); box-shadow: none; }
+.cf-medal.m2 { background: linear-gradient(135deg, #c9ced6, #8a8f98); box-shadow: none; }
+.cf-medal.m3 { background: linear-gradient(135deg, #d99a64, #a9652f); box-shadow: none; }
+
+.cf-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.cf-field label { font-weight: 700; font-size: 0.95rem; color: var(--oz-brand-dark); }
+.cf-input {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 1rem;
+  min-height: 3.4rem;
+  background: var(--bg-alt);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.cf-input:focus-within {
+  background: #fff;
+  border-color: var(--oz-brand-green);
+  box-shadow: 0 0 0 4px rgba(0, 154, 0, 0.12);
+}
+.cf-icon { display: inline-flex; color: var(--text-muted); }
+.cf-input:focus-within .cf-icon { color: var(--oz-brand-green); }
+.cf-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cf-input input {
+  flex: 1;
+  min-width: 0;
+  border: none !important;
+  background: transparent;
+  padding: 0.85rem 0 !important;
+  font-size: 1.1rem !important;
+  font-family: inherit;
+  color: var(--text);
+  outline: none;
+}
+.cf-input input::placeholder { color: #9CA3AF; }
+.cf-hint { margin: 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; }
+
+.cf-prize {
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 2px dashed #f3c7a8;
+  border-radius: var(--radius);
+  background: var(--bg-orange);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.cf-prize-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; }
+.cf-prize-title { font-family: var(--font-heading); font-weight: 800; font-size: 1rem; line-height: 1.3; color: #7a3a12; }
+.cf-optional {
+  flex: none;
+  margin-top: 0.1rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--oz-brand-orange);
+}
+.cf-prize-text { margin: 0; font-size: 0.88rem; line-height: 1.45; color: #7a3a12; }
+.cf-prize .cf-input { background: #fff; }
+
+.cf-check {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.85rem;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  animation: cf-in 0.25s ease;
+}
+.cf-check[hidden] { display: none; }
+.cf-check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cf-check-box {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 7px;
+  border: 2px solid #b0b7c0;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+.cf-check input:checked + .cf-check-box { background: var(--oz-brand-green); border-color: var(--oz-brand-green); }
+.cf-check input:checked + .cf-check-box::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.8rem;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: translateY(-2px) rotate(45deg);
+}
+.cf-check input:focus-visible + .cf-check-box { box-shadow: 0 0 0 4px rgba(0, 154, 0, 0.2); }
+.cf-check:has(input:checked) { border-color: var(--oz-brand-green); }
+.cf-check.is-missing { border-color: #B91C1C; animation: cf-shake 0.35s; }
+.cf-check-text { font-size: 0.88rem; line-height: 1.45; }
+@keyframes cf-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+.cf-note {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-alt);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+.cf-error {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: #FEF2F2;
+  color: #B91C1C;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.cf-error[hidden] { display: none; }
+
+.cf-submit {
+  width: 100%;
+  min-height: 3.6rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--oz-brand-green);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.15rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 154, 0, 0.3);
+  transition: transform 0.15s, background 0.15s;
+}
+.cf-submit:hover { background: var(--oz-brand-green-hover); }
+.cf-submit:active { transform: scale(0.98); }
+.cf-submit:disabled { opacity: 0.6; cursor: wait; }
+
+.cf-secondary {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.7rem 1.3rem;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: #fff;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* ---- Erfolg ---- */
+.cf-done { text-align: center; padding: 0.75rem 0 0.25rem; }
+.cf-done-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  background: var(--oz-brand-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 10px var(--bg-green);
+  animation: cf-pop 0.45s cubic-bezier(.2, 1.4, .4, 1);
+}
+.cf-done-icon svg { width: 2.4rem; height: 2.4rem; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes cf-pop { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.cf-done h2 { margin: 0.4rem 0 0.6rem; font-family: var(--font-heading); font-size: 1.5rem; }
+.cf-done-name { margin: 0; font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--oz-brand-green-dark); }
+.cf-done-rank { margin: 0.1rem 0 0.8rem; font-weight: 600; }
+.cf-done-text { margin: 0; color: var(--text-muted); font-size: 0.92rem; }

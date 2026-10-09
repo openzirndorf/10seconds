@@ -19,7 +19,7 @@
     return (ms / 1000).toFixed(3);
   }
 
-  function renderTable(tbody, emptyEl, list) {
+  function renderTable(tbody, emptyEl, list, editable = false) {
     tbody.innerHTML = '';
     emptyEl.hidden = list.length > 0;
     for (const entry of list) {
@@ -29,6 +29,10 @@
       const rank = document.createElement('td');
       rank.className = 'rank';
       rank.textContent = `${entry.rank}.`;
+
+      const code = document.createElement('td');
+      code.className = 'code';
+      code.textContent = entry.code || '—';
 
       const nick = document.createElement('td');
       nick.textContent = entry.nickname;
@@ -43,23 +47,96 @@
       dev.textContent = `${sign}${fmt(entry.deviation_ms)} s`;
 
       const email = document.createElement('td');
-      email.textContent = entry.email || '—';
+      if (editable) {
+        email.append(mailForm(entry));
+      } else {
+        email.textContent = entry.email || '—';
+      }
 
-      tr.append(rank, nick, time, dev, email);
+      tr.append(rank, code, nick, time, dev, email);
+      if (editable) {
+        const actions = document.createElement('td');
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'btn btn-danger btn-small';
+        del.textContent = 'Entfernen';
+        del.addEventListener('click', () => removeEntry(entry));
+        actions.append(del);
+        tr.append(actions);
+      }
       tbody.appendChild(tr);
     }
   }
 
-  async function authedFetch(path) {
+  // Mail von einem Papier-Zettel eintragen (oder mit leerem Feld wieder entfernen).
+  function mailForm(entry) {
+    const form = document.createElement('form');
+    form.className = 'mail-form';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.inputMode = 'email';
+    input.autocomplete = 'off';
+    input.placeholder = 'Mail vom Zettel';
+    input.value = entry.email || '';
+    const save = document.createElement('button');
+    save.type = 'submit';
+    save.className = 'btn btn-primary';
+    save.textContent = 'Speichern';
+    const msg = document.createElement('span');
+    msg.className = 'row-msg';
+    form.append(input, save);
+    const wrap = document.createElement('div');
+    wrap.append(form, msg);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      save.disabled = true;
+      msg.className = 'row-msg';
+      msg.textContent = '';
+      try {
+        await authedFetch(`/api/admin/entries/${entry.id}/email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: input.value.trim() }),
+        });
+        await loadAll();
+      } catch (err) {
+        if (err.message === 'unauthorized') return;
+        msg.className = 'row-msg error';
+        msg.textContent = err.message;
+        save.disabled = false;
+      }
+    });
+    return wrap;
+  }
+
+  async function removeEntry(entry) {
+    if (!confirm(`Eintrag „${entry.nickname}“ (${fmt(entry.elapsed_ms)} s) aus der Rangliste entfernen?`)) return;
+    try {
+      await authedFetch(`/api/admin/entries/${entry.id}`, { method: 'DELETE' });
+      await loadAll();
+    } catch (err) {
+      if (err.message !== 'unauthorized') alert(err.message);
+    }
+  }
+
+  async function authedFetch(path, options = {}) {
     const password = sessionStorage.getItem(SESSION_KEY);
-    const res = await fetch(path, { headers: { 'X-Admin-Password': password || '' } });
+    const res = await fetch(path, {
+      ...options,
+      headers: { ...(options.headers || {}), 'X-Admin-Password': password || '' },
+    });
     if (res.status === 401 || res.status === 404) {
       sessionStorage.removeItem(SESSION_KEY);
       showLogin(res.status === 404 ? 'Admin-Zugang ist serverseitig nicht konfiguriert.' : 'Falsches Passwort.');
       throw new Error('unauthorized');
     }
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      const detail = data && (typeof data.detail === 'string' ? data.detail : data.detail?.[0]?.msg);
+      throw new Error((detail || `HTTP ${res.status}`).replace(/^Value error, /, ''));
+    }
+    return res.status === 204 ? null : res.json();
   }
 
   function showLogin(error) {
@@ -82,7 +159,7 @@
       ]);
       poolSize.textContent = pool.length;
       renderTable(poolRows, poolEmpty, pool);
-      renderTable(allRows, allEmpty, entries);
+      renderTable(allRows, allEmpty, entries, true);
       showAdmin();
     } catch {
       /* showLogin wurde bereits von authedFetch aufgerufen, falls das der Grund war */

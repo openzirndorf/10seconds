@@ -28,15 +28,52 @@ Mailadresse geht **nie** über die öffentlichen Endpunkte raus.
 
 ## Preisstufen & Rangliste
 
-- Top 20 landen in der Rangliste (Nickname frei wählbar, sonst vergibt der
-  Server einen Waschbär-Fantasienamen).
-- Ab Rang 10 wird zusätzlich optional eine Mailadresse abgefragt (für die
-  Verlosung) — bleibt das Feld leer, ist nur der Nickname gespeichert.
-- **Hauptpreis:** ≤ 50 ms Abweichung (selten) · **Trostpreis:** ≤ 400 ms
-  (mittel) — beide zeigen im Spiel einen Hinweis, sich beim Standpersonal
-  den Stempel zu holen (kein App-seitiger Spielsperren-Mechanismus, siehe
-  Begründung im Code: ein gemeinsames Gerät am Stand muss für alle
-  Spieler:innen nutzbar bleiben).
+- **Ranglisten-Runde per Taste `R`:** Nur Runden, die das Standpersonal vor
+  dem Start mit `R` markiert (Erwachsene oder Kinder mit Erwachsenen),
+  gehen an den Server – alle anderen zählen nur für die Sofort-Preise. Gilt immer nur für
+  die nächste Runde; nochmal `R` nimmt es zurück. Der Buzzer sendet
+  Enter/Leertaste, `R` kann also nur jemand an der Tastatur auslösen.
+- Top 20 der Ranglisten-Runden landen in der Rangliste (Spielbildschirm
+  zeigt die Top 10 ohne Scrollen, `/live` alle 20). Der Server vergibt
+  einen Waschbär-Fantasienamen und einen 3-stelligen **Zettel-Code** (ohne
+  verwechselbare Zeichen, nur auf dem Spielbildschirm und im Admin sichtbar,
+  nicht in der öffentlichen Rangliste).
+- **Mail nachtragen** passiert abseits des Spielrechners:
+  - **QR-Code** im Ergebnis → `/e/<token>` auf dem eigenen Handy. Der
+    geheime Token geht nur an das Gerät, das das Ergebnis eingereicht hat,
+    und gilt 24 h (`CLAIM_TTL_HOURS`).
+  - **Papier-Zettel** (Code + Zeit schreibt das Standpersonal, Mail +
+    Häkchen „ab 18 / Begleitperson“ die Person selbst) in eine
+    verschlossene Box. Nach Aktionsende trägt der Vorstand die Mails in
+    `/admin` ein (`POST /api/admin/entries/{id}/email`), von Platz 1 abwärts,
+    Zeit auf dem Zettel gegen die Zeit im Admin prüfen.
+  - **Jede Mail nimmt nur einmal teil** (`_apply_claim()` in
+    `leaderboard.py`, Vergleich ohne Groß/Klein und `+Zusatz`), egal über
+    welchen Weg: besseres Ergebnis ersetzt den alten Eintrag, schlechteres
+    wird abgelehnt. `POST /api/scores` nimmt deshalb nur die Zeit an.
+  - Versehentliche Ranglisten-Runden lassen sich in `/admin` entfernen.
+  - Mail-Häkchen „mindestens 18 Jahre oder erwachsene Begleitperson“: Für
+    Kinder trägt die Begleitperson ihre eigene Mail ein. Teilnahmebedingungen
+    unter `/teilnahme`.
+- **Kosten:** 1 € pro Versuch, 3 Versuche 2 € – für alle, auch Kinder.
+  Neue Mitglieder bekommen 2 Freiversuche
+  (Hinweis auf der Spielfläche, in `/teilnahme` und auf dem Spielregeln-Blatt).
+- Ergebnis springt nach 12 s (bzw. 45 s mit QR-Code/Zettel-Code) automatisch zurück.
+- **Sofort-Preise in drei Stufen:** Kategorie 1 ≤ 100 ms, Kategorie 2
+  ≤ 400 ms, sonst Trostpreis (Gummibärchen). Startwerte ausgelegt auf
+  ~150–200 Runden in 5 Stunden bei 14 bzw. 46 Preisen. Das Banner im Spiel
+  sagt, aus welcher Kategorie man sich etwas aussuchen darf (kein
+  App-seitiger Spielsperren-Mechanismus: ein gemeinsames Gerät am Stand muss
+  für alle Spieler:innen nutzbar bleiben).
+- **Personal-Anzeige per Taste `S`:** Runden heute, vergebene/übrige Preise
+  pro Kategorie, Preisfenster und Vorrat änderbar, „Tag zurücksetzen“. Gilt
+  nur auf diesem Rechner (localStorage), keine Code-Änderung nötig.
+- **Live-Statistik** unten in der Sofort-Preise-Spalte (Verteilung aller
+  Runden des Tages als ein Balken, beste Runde) und im Ergebnis „Näher dran
+  als X % aller Versuche heute“ (ab 10 Runden). Zählt alle Runden, auch die
+  ohne `R` – deshalb lokal auf dem Spiel-PC statt im Backend; gespeichert
+  werden nur Abweichungen, keine personenbezogenen Daten. Neuer Tag =
+  automatisch neue Statistik.
 - **Verlosung:** `/admin` zeigt die Top 5 *unterschiedlichen* Mailadressen
   nach Zeitabweichung (bester Versuch pro Person). Belegt eine Person
   mehrere Spitzenplätze, zählt nur ihr bester Platz — die nächste
